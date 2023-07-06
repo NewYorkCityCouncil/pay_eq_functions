@@ -1,16 +1,22 @@
 #' Cleaning the dataset
 #'
-#' This function will ask for the file location containing the pay equity data.
+#' @description
+#' Cleans the dataset and adds calculated columns.
+#'
+#' @details
 #' It will rename all the column names, then clean and set data types the correct ones.
+#'
 #' The newly created columns are as follows:
-#' "days_from_start":
-#' "years_from_start":
-#' "age":
-#' "age_years":
-#' "age_above18":
-#' "race_eth":
-#' "nonwhite":
-#' "nonwhite_female":
+#' \enumerate{
+#' \item `days_from_start`: `year`-12-31 - `start_date`
+#' \item `years_from_start`: `days_from_start`/365
+#' \item `age`: `year`-12-31 - `dob`
+#' \item `age_years`: \code{floor(age)}
+#' \item `age_above18`: `age_years` - 18
+#' \item `race_eth`: As defined in the DCAS worker's profile report
+#' \item `nonwhite`: 1 if `race` is neither "White" or "Unknown or Choose Not to Disclose" or if `ethnicity` is "Hispanic or Latino".
+#' \item `nonwhite_female`: 1 if `nonwhite` is 1 and if `gender` is "Female"
+#' }
 #'
 #' This function will return a cleaned and tidied pay dataset.
 #'
@@ -19,19 +25,31 @@
 #' @import dplyr
 #' @importFrom lubridate year
 #' @import readxl
-#' @param filepath Path to the pay equity file. Default is set as "C:/Users/Public/Desktop/1- 22 Data Elements Dataset.csv"
-#' @param year YYYY Year of dataset. Used for calculating years from start and age
-#' @param column_names Accepts a vector of column names in the order they should appear. Default is \code{"default"}. WARNING: If the default does not work, or is changed, other functions in this package may not function
-#' @param filter_employee_status Filter options, default is \code{filter = "full-time"}. Accepts \code{"part-time"} for filtering to a part-time prefixed settings. If anything else is inputted, then it will return the full dataset without any employee_status filters.
-#' @param uniform_filepath Add filepath for the uniform titles for the uniform title column
-#' @return Cleaned dataset as a data frame
+#' @param filepath string. Path to the pay equity file. Default is set as "C:/Users/Public/Desktop/Local Law 18 Materials/1- 22 Data Elements Dataset.csv"
+#' @param dataset dataframe. Input the preprocessed dataframe. Either filepath or dataset params must be populated.
+#' @param year numeric. YYYY Year of dataset. Used for calculating years from start and age \bold{(REQUIRED)}
+#' @param column_names string. Accepts a vector of column names in the order they should appear. Default is \code{"default"}. WARNING: If the default does not work, or is changed, other functions in this package may not function
+#' @param filter_employee_status string. Filter options, default is \code{filter = "full-time"}. Accepts \code{"part-time"} for filtering to a part-time prefixed settings. If anything else is inputted, then it will return the full dataset without any employee_status filters.
+#' @param uniform_filepath string. Add filepath for the uniform titles for the uniform title column
+#' @return Dataframe of cleaned dataset
 #' @export
 
-clean_data <- function(filepath = "C:/Users/Public/Desktop/1- 22 Data Elements Dataset.csv",year,column_names = "default",filter_employee_status = "full-time",uniform_filepath){
+clean_data <- function(filepath = "C:/Users/Public/Desktop/Local Law 18 Materials/1- 22 Data Elements Dataset.csv",dataset,year,column_names = "default",filter_employee_status = "full-time",uniform_filepath){
   # Create a temporary dataframe with all the data
-  temp_df <- read.csv(filepath,
-                      header = T,
-                      sep = "\t")
+  if(!base::missing(dataset)){
+    temp_df <- dataset
+  } else{
+    temp_df <- tryCatch(read.csv(filepath,
+                                 header = T),
+                        error=function(cond) {
+                          message(cond)
+                        })
+  }
+
+  # Stop if year is missing
+  if(base:missing(year)){
+    stop("Please provide a value for year.")
+  }
 
   # Change column names
   if(column_names == "default"){
@@ -63,7 +81,7 @@ clean_data <- function(filepath = "C:/Users/Public/Desktop/1- 22 Data Elements D
            age = as.numeric(as.numeric(as.Date(paste0(max_year,"-12-31")) - dob))/365,
            age_years = floor(age),
            age_above18 = (age_years - 18),
-           gender = relevel(gender,ref = "Male"),
+           gender = relevel(as.factor(gender),ref = "Male"),
            race_eth = factor(case_when(
              ethnicity == "Hispanic or Latino" ~ as.character(ethnicity),
              ethnicity == "Unknown or Choose Not to Disclose" ~ "Ethnicity Unknown or Choose Not to Disclose",
@@ -96,7 +114,7 @@ clean_data <- function(filepath = "C:/Users/Public/Desktop/1- 22 Data Elements D
              title_classification == "Competitive" | title_classification == "Non-Competitive")
   }
 
-  if(!missing(uniform_filepath)){
+  if(!base::missing(uniform_filepath)){
     uniform_titles <- read_excel(uniform_filepath)
 
     output <- output %>%

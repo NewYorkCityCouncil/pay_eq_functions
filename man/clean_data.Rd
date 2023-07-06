@@ -5,7 +5,9 @@
 \title{Cleaning the dataset}
 \usage{
 clean_data(
-  filepath = "C:/Users/Public/Desktop/1- 22 Data Elements Dataset.csv",
+  filepath =
+    "C:/Users/Public/Desktop/Local Law 18 Materials/1- 22 Data Elements Dataset.csv",
+  dataset,
   year,
   column_names = "default",
   filter_employee_status = "full-time",
@@ -13,33 +15,39 @@ clean_data(
 )
 }
 \arguments{
-\item{filepath}{Path to the pay equity file. Default is set as "C:/Users/Public/Desktop/1- 22 Data Elements Dataset.csv"}
+\item{filepath}{string. Path to the pay equity file. Default is set as "C:/Users/Public/Desktop/Local Law 18 Materials/1- 22 Data Elements Dataset.csv"}
 
-\item{year}{YYYY Year of dataset. Used for calculating years from start and age}
+\item{dataset}{dataframe. Input the preprocessed dataframe. Either filepath or dataset params must be populated.}
 
-\item{column_names}{Accepts a vector of column names in the order they should appear. Default is \code{"default"}. WARNING: If the default does not work, or is changed, other functions in this package may not function}
+\item{year}{numeric. YYYY Year of dataset. Used for calculating years from start and age \bold{(REQUIRED)}}
 
-\item{filter_employee_status}{Filter options, default is \code{filter = "full-time"}. Accepts \code{"part-time"} for filtering to a part-time prefixed settings. If anything else is inputted, then it will return the full dataset without any employee_status filters.}
+\item{column_names}{string. Accepts a vector of column names in the order they should appear. Default is \code{"default"}. WARNING: If the default does not work, or is changed, other functions in this package may not function}
 
-\item{uniform_filepath}{Add filepath for the uniform titles for the uniform title column}
+\item{filter_employee_status}{string. Filter options, default is \code{filter = "full-time"}. Accepts \code{"part-time"} for filtering to a part-time prefixed settings. If anything else is inputted, then it will return the full dataset without any employee_status filters.}
+
+\item{uniform_filepath}{string. Add filepath for the uniform titles for the uniform title column}
 }
 \value{
-Cleaned dataset as a data frame
+Dataframe of cleaned dataset
 }
 \description{
-This function will ask for the file location containing the pay equity data.
-It will rename all the column names, then clean and set data types the correct ones.
-The newly created columns are as follows:
-"days_from_start":
-"years_from_start":
-"age":
-"age_years":
-"age_above18":
-"race_eth":
-"nonwhite":
-"nonwhite_female":
+Cleans the dataset and adds calculated columns.
 }
 \details{
+It will rename all the column names, then clean and set data types the correct ones.
+
+The newly created columns are as follows:
+\enumerate{
+\item \code{days_from_start}: \code{year}-12-31 - \code{start_date}
+\item \code{years_from_start}: \code{days_from_start}/365
+\item \code{age}: \code{year}-12-31 - \code{dob}
+\item \code{age_years}: \code{floor(age)}
+\item \code{age_above18}: \code{age_years} - 18
+\item \code{race_eth}: As defined in the DCAS worker's profile report
+\item \code{nonwhite}: 1 if \code{race} is neither "White" or "Unknown or Choose Not to Disclose" or if \code{ethnicity} is "Hispanic or Latino".
+\item \code{nonwhite_female}: 1 if \code{nonwhite} is 1 and if \code{gender} is "Female"
+}
+
 This function will return a cleaned and tidied pay dataset.
 
 By default, dataset is filtered for "Full-Time", "Competitive", and "Non-Competitive" employees who make over $15,000 and are over 16 years of age.

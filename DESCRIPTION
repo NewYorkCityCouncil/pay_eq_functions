@@ -1,10 +1,10 @@
 Package: payeqfunctions
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Pay Equity Functions
+Version: 1.1
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+    person("James", "Wu", , "jwucouncil@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description:  This is a compilation of commonly used functions for pay equity to help NYCC Data Team do their annual reports.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
