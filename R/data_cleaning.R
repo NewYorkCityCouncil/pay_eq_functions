@@ -53,12 +53,7 @@ clean_data <- function(filepath = "C:/Users/Public/Desktop/Local Law 18 Material
 
   # Change column names
   if(column_names == "default"){
-    colnames(temp_df) <- c('agency','start_date','civil_service_title_code','civil_service_title_name',
-                           'min_salary','max_salary','business_title','title_classification',
-                           'job_category','career_level_title_suffix','career_level_title_level',
-                           'base_salary','salary_pay_band','DCAS_OGC','DCAS_OGN','managerial',
-                           'highest_educ_level','gender','race','ethnicity','dob','provisional_status',
-                           'employee_status','personnel_status_change_desc','prev_employed')
+    colnames(temp_df) <- view_default_column_names()
   } else{
     colnames(temp_df) <- column_names
   }
@@ -121,4 +116,20 @@ clean_data <- function(filepath = "C:/Users/Public/Desktop/Local Law 18 Material
       mutate(uniform = ifelse(civil_service_title_code %in% uniform_titles$TC,"yes","no"))
   }
   return(output)
+}
+
+#' Viewing column names used for clean_data function
+#'
+#' @description
+#' Viewing column names used for clean_data function. Useful as a jumping board should any column names need to be changed.
+#'
+#' @return Vector of column names used
+
+view_default_column_names <- function(){
+  return(c('agency','start_date','civil_service_title_code','civil_service_title_name',
+           'min_salary','max_salary','business_title','title_classification',
+           'job_category','career_level_title_suffix','career_level_title_level',
+           'base_salary','salary_pay_band','DCAS_OGC','DCAS_OGN','managerial',
+           'highest_educ_level','gender','race','ethnicity','dob','provisional_status',
+           'employee_status','personnel_status_change_desc','prev_employed'))
 }
