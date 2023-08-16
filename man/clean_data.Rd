@@ -52,3 +52,8 @@ This function will return a cleaned and tidied pay dataset.
 
 By default, dataset is filtered for "Full-Time", "Competitive", and "Non-Competitive" employees who make over $15,000 and are over 16 years of age.
 }
+\examples{
+\dontrun{
+clean_data(year = 2020)
+}
+}

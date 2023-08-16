@@ -1,6 +1,6 @@
 Package: payeqfunctions
 Title: Pay Equity Functions
-Version: 1.11
+Version: 1.12
 Authors@R: 
     person("James", "Wu", , "jwucouncil@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))

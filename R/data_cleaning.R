@@ -33,6 +33,10 @@
 #' @param uniform_filepath string. Add filepath for the uniform titles for the uniform title column
 #' @return Dataframe of cleaned dataset
 #' @export
+#' @examples
+#' \dontrun{
+#' clean_data(year = 2020)
+#' }
 
 clean_data <- function(filepath = "C:/Users/Public/Desktop/Local Law 18 Materials/1- 22 Data Elements Dataset.csv",dataset,year,column_names = "default",filter_employee_status = "full-time",uniform_filepath){
   # Create a temporary dataframe with all the data
@@ -47,13 +51,17 @@ clean_data <- function(filepath = "C:/Users/Public/Desktop/Local Law 18 Material
   }
 
   # Stop if year is missing
-  if(base:missing(year)){
+  if(base::missing(year)){
     stop("Please provide a value for year.")
   }
 
   # Change column names
   if(column_names == "default"){
-    colnames(temp_df) <- view_default_column_names()
+    tryCatch(colnames(temp_df) <- view_default_column_names(),
+             error=function(cond){
+               message(cond)
+               stop("\n# Column Names do not match number of columns in dataset")
+             })
   } else{
     colnames(temp_df) <- column_names
   }
@@ -124,6 +132,9 @@ clean_data <- function(filepath = "C:/Users/Public/Desktop/Local Law 18 Material
 #' Viewing column names used for clean_data function. Useful as a jumping board should any column names need to be changed.
 #'
 #' @return Vector of column names used
+#' @export
+#' @examples
+#' view_default_column_names()
 
 view_default_column_names <- function(){
   return(c('agency','start_date','civil_service_title_code','civil_service_title_name',
