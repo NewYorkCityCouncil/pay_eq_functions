@@ -44,5 +44,7 @@ race_eth_summary(data = cleaned_dataset, high_low = "low", spread_format = "long
 race_eth_summary(data = cleaned_dataset, high_low = "high", spread_format = "long")
 # Race/Ethnicity Breakdown by Title in an Agency
 race_eth_summary(data = cleaned_dataset, interested_agency = "FIRE DEPARTMENT")
+# DOP Salaries and Race
+race_eth_summary(data = cleaned_dataset, interested_agency = "DEPARTMENT OF PROBATION",spread_format = "wide")
 }
 }
