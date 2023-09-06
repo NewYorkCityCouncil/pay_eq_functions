@@ -119,6 +119,7 @@ race_eth_summary <- function(data, interested_agency = NULL, high_low = NULL, sp
           summarise(., num_race_eth = n(),
                     med_salary = median(base_salary),
                     mean_salary = mean(base_salary))} %>%
+    mutate(perc_race_eth = num_race_eth/sum(num_race_eth)) %>%
     replace(is.na(.),0)
 
   temp_white_nonwhite <- temp_data %>%
@@ -145,8 +146,8 @@ race_eth_summary <- function(data, interested_agency = NULL, high_low = NULL, sp
       filter(count >= 5, median_pay_overall > 10) %>%
       select(civil_service_title_name, civil_service_title_code, median_pay_overall, mean_pay_overall) %>%
       {if(high_low == "high")
-        arrange(.,median_pay_overall) else
-          arrange(.,desc(median_pay_overall))} %>%
+        arrange(.,desc(median_pay_overall)) else
+          arrange(.,median_pay_overall)} %>%
       ungroup() %>%
       left_join(temp_race_eth, by = c("civil_service_title_name", "civil_service_title_code")) %>%
       mutate(across(where(is.numeric),round,2))
@@ -199,6 +200,8 @@ race_eth_summary <- function(data, interested_agency = NULL, high_low = NULL, sp
 #' \dontrun{
 #' # Median Salary for Civil Service Title Codes by Share of Non-White Employees per Title
 #' title_code_share(data = cleaned_dataset, share_var = "nonwhite", share_var_val = 1) # Binned nonwhite proportions for titles
+#' # Median Salary for Civil Service Titltle Codes by Share of Female Employees per Title
+#' title_code_share(data = cleaned_dataset, share_var = "gender", share_var_val = "Female")
 #' # Median Salary for Civil Service Title Codes by Share of Non-White Female Employees per Title
 #' title_code_share(data = DOB_cleaned_dataset, share_var = "nonwhite_female", share_var_val = 1, binning = FALSE) # Nonbinned nonwhite female proportions for titles in the DOB
 #' }

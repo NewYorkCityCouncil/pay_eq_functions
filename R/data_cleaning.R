@@ -56,7 +56,7 @@ clean_data <- function(filepath = "C:/Users/Public/Desktop/Local Law 18 Material
   }
 
   # Change column names
-  if(column_names == "default"){
+  if(column_names == "default" & length(column_names) == 1){
     tryCatch(colnames(temp_df) <- view_default_column_names(),
              error=function(cond){
                message(cond)
